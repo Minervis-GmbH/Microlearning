@@ -19,7 +19,7 @@ class DesktopCollection extends AbstractCollection
     /**
      * @var ilObjUser
      */
-    protected $user;
+    protected ilObjUser $user;
 
 
     /**

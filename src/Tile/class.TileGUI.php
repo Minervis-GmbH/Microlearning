@@ -2,6 +2,7 @@
 
 namespace minervis\ToGo\Tile;
 
+use ilGlobalTemplateInterface;
 use ilLink;
 use ilToGoPlugin;
 use ilUIPluginRouterGUI;
@@ -190,6 +191,7 @@ class TileGUI
      */
     protected function saveProperties()/*: void*/
     {
+        global $tpl;
         self::ildic()->tabs()->activateTab(self::TAB_TILE);
 
         $form = self::togo()->tiles()->factory()->newFormInstance($this, $this->tile);
@@ -200,7 +202,7 @@ class TileGUI
 
             return;
         }
-        ilUtil::sendSuccess(self::togoplugin()->translate("saved", self::LANG_MODULE), true);
+        $tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, self::togoplugin()->translate("saved", self::LANG_MODULE), true);
         self::ildic()->ctrl()->redirect($this, 'edit');
     }
 

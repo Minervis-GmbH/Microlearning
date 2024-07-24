@@ -32,6 +32,9 @@
 .tiles[data-view="2"] .tile .card .card_title {
   min-height: unset;
 }
+.tiles .ui-dropzone-wrapper.ui-dropzone-wrapper{
+  width: unset;
+}
 .tile .card {
   display: flex;
   flex-direction: column;

@@ -5,6 +5,9 @@ namespace minervis\ToGo\Tile\Renderer\Container;
 use Closure;
 use ilFileUploadGUI;
 use ilFileUploadUtil;
+use ilObjectFactory;
+use ilObjFileUploadDropzone;
+use LTI\ilGlobalTemplate;
 use minervis\ToGo\Tile\Renderer\AbstractSingleGUI;
 
 /**
@@ -26,31 +29,33 @@ class ContainerSingleGUI extends AbstractSingleGUI
     public function render() : string
     {
         $html = parent::render();
+        return $this->tpl->get();
 
-        if (!self::$reset_file_upload_gui) {
-            // The generated HTML/OnLoadCode of ilFileUploadGUI is incompatible with this Plugin - try to reset it once ...
-
-            // Main HTML was removed through ilToGoUIHookGUI - Force it again
+        if ( false || !self::$reset_file_upload_gui) {
             Closure::bind(function () {
-                ilFileUploadGUI::$shared_code_loaded = false;
-            }, null, ilFileUploadGUI::class)();
+            }, null, ilObjFileUploadDropzone::class)();
+            $on_load_code = self::ildic()->ui()->mainTemplate()->getOnLoadCodeForAsynch();
+            foreach ((array) $on_load_code as &$codes) {
+                self::ildic()->logger()->root()->dump(array(strpos($codes, "il.UI.Dropzone")));
+                if (strpos($codes, "il.UI.Dropzone") !== false) {
+                    $codes = "";
 
-            // Remove on load code which not works anymore because refers to not exists element
-            foreach ((array) self::ildic()->ui()->mainTemplate()->on_load_code as &$codes) {
-                foreach ($codes as &$code) {
-                    if (strpos($code, "FileUpload") !== false) {
-                        $code = "";
-                    }
                 }
             }
+            self::ildic()->logger()->root()->dump(array(count((array) $on_load_code), ));
 
             self::$reset_file_upload_gui = true;
         }
+        global $DIC, $tpl;
+        //$html = $this->tpl->get();
 
-        if (ilFileUploadUtil::isUploadAllowed($this->tile->getObjRefId())) {
+        $il_object = ilObjectFactory::getInstanceByRefId($this->tile->getObjRefId(), false);
+        $file_upload_zone = new ilObjFileUploadDropzone($this->tile->getObjRefId(),  $this->tpl->get());
+        if ($file_upload_zone->isUploadAllowed($il_object->getType())) {
+            //$tpl->setFileUploadRefId($this->tile->getObjRefId());
             $html = self::togoplugin()->getHTML([
-                $html,
-                new ilFileUploadGUI("sr_tile_" . $this->tile->getTileId(), $this->tile->getObjRefId()) // ... and generate new ilFileUploadGUI
+                //$this->tpl->get(),
+                $file_upload_zone->getDropzoneHtml()
             ]);
         }
 

@@ -29,6 +29,7 @@ abstract class AbstractSingleGUI implements SingleGUIInterface
      * @var Tile
      */
     protected $tile;
+    protected \ilTemplate $tpl;
 
 
     /**
@@ -138,6 +139,7 @@ abstract class AbstractSingleGUI implements SingleGUIInterface
 
 
         $tpl->parseCurrentBlock();
+        $this->tpl = $tpl;
 
         return self::togoplugin()->getHTML($tpl);
     }
@@ -180,3 +182,4 @@ abstract class AbstractSingleGUI implements SingleGUIInterface
         return $count_users;
     }
 }
+

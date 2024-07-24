@@ -128,7 +128,7 @@ class ilToGoUIHookGUI extends ilUIHookPluginGUI
     /**
      * @inheritDoc
      */
-    public function modifyGUI(/*string*/ $a_comp, /*string*/ $a_part, /*array*/ $a_par = [])/*: void*/
+    public function modifyGUI(string $a_comp, string $a_part, array $a_par = []): void
     {
         $obj_ref_id = self::filterRefId();
 
@@ -185,7 +185,6 @@ class ilToGoUIHookGUI extends ilUIHookPluginGUI
             && $a_part === self::TEMPLATE_GET
             && $a_par["tpl_id"] === self::TEMPLATE_ID_REPOSITORY
             && (self::$load[self::REPOSITORY_LOADER] = true)
-            && (true == true)
             && !in_array(self::ildic()->ctrl()->getCmd(), ["editOrder"])
             && !in_array(self::ildic()->ctrl()->getCallHistory()[0]["cmd"], ["editOrder"])
             && !$_SESSION["il_cont_admin_panel"]

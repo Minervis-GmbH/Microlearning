@@ -1,6 +1,6 @@
 <?php
-include_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/ToGo/classes/class.ilToGoConfig.php";
-
+// include_once "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/ToGo/classes/class.ilToGoConfig.php";
+// use ilToGoConfig;
 use minervis\ToGo\Collection\AnonymousSession;
 use minervis\ToGo\Collection\Collection;
 use minervis\ToGo\Utils\ToGoTrait;
@@ -9,6 +9,7 @@ use minervis\ToGo\Utils\ToGoTrait;
  *
  * @author  Jephte Abijuru <jephte.abijuru@minervis.com>
  * @version $Id$
+ * @ilCtrl_IsCalledBy ilToGoConfigGUI: ilObjComponentSettingsGUI
  */
 class ilToGoConfigGUI extends ilPluginConfigGUI
 {
@@ -38,10 +39,7 @@ class ilToGoConfigGUI extends ilPluginConfigGUI
     }
 
 
-    /**
-     * @inheritDoc
-     */
-    public function performCommand(/*string*/ $cmd)/*:void*/
+    public function performCommand(/*string*/ $cmd): void
     {
         $this->setTabs();
         $next_class = $this->dic->ctrl()->getNextClass($this);
@@ -139,7 +137,7 @@ class ilToGoConfigGUI extends ilPluginConfigGUI
 
     public function initConfigurationForm()
     {
-        global $ilCtrl;
+        global $ilCtrl, $tpl;
         $pl = $this->getPluginObject();
         $values = $this->config->getValues();
         $form = new ilPropertyFormGUI();
@@ -252,7 +250,7 @@ class ilToGoConfigGUI extends ilPluginConfigGUI
             $values ['stage'] = intval($form->getInput("stage"));
             $this->config->setValues($values);
             $this->config->save();
-            ilUtil::sendSuccess($this->plugin_object->txt("config_configuration_saved"), true);
+            $tpl->setOnScreenMessage(ilGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->plugin_object->txt("config_configuration_saved"), true);
             $this->dic->ctrl()->redirect($this, self::CMD_CONFIGURE);
         }else{
             $form->setValuesByPost();

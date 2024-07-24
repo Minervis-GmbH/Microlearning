@@ -9,8 +9,10 @@ use ilUIPluginRouterGUI;
 use minervis\ToGo\Tile\Tile;
 use minervis\ToGo\Utils\ToGoTrait;
 use minervis\ToGo\Tile\TileGUI;
-
+use ilTemplate;
 use ilGroupedListGUI;
+use ilObjectFactory;
+use ilContainer;
 use minervis\ToGo\Collection\AnonymousSession;
 use minervis\ToGo\Collection\AnonymousSummary;
 
@@ -33,7 +35,10 @@ abstract class AbstractCollectionGUI implements CollectionGUIInterface
      */
     protected $collection;
     protected $tiles;
-    
+    /**
+     * @var \ILIAS\DI\Container|mixed
+     */
+    private $dic;
 
 
     /**
@@ -43,8 +48,12 @@ abstract class AbstractCollectionGUI implements CollectionGUIInterface
      */
     public function __construct($param)
     {
+        global $DIC, $tpl;
+        $this->dic = $DIC;
+        $this->tpl = $tpl;
         $this->collection = self::togo()->tiles()->renderer()->factory()->newCollectionInstance($this, $param);
         $this->tiles = $this->collection->getTiles();
+        $this->object = ilObjectFactory::getInstanceByRefId(intval(self::togo()->config()->getHomeRefId()), true);
     }
 
 
@@ -53,8 +62,10 @@ abstract class AbstractCollectionGUI implements CollectionGUIInterface
      */
     protected function initJS()/*: void*/
     {
-        self::ildic()->ui()->mainTemplate()->addJavascript(self::togoplugin()->directory() . "/js/tiles.js");
-        self::ildic()->ui()->mainTemplate()->addJavaScript(self::togoplugin()->directory() . "/node_modules/@iconfu/svg-inject/dist/svg-inject.min.js");
+
+        $this->tpl->addJavascript(self::togoplugin()->directory() . "/js/tile.js");
+        $this->tpl->addJavaScript(self::togoplugin()->directory() . "/node_modules/@iconfu/svg-inject/dist/svg-inject.min.js");
+
     }
 
 
@@ -66,16 +77,20 @@ abstract class AbstractCollectionGUI implements CollectionGUIInterface
         $this->initJS();
 
         $collection_html = "";
+        $jsTpl = new ilTemplate(self::togoplugin()->directory() . '/node_modules/@iconfu/svg-inject/dist/svg-inject.min.js', true, true );
+        self::ildic()->ui()->mainTemplate()->addOnLoadCode($jsTpl->get());
+
+        if (ilContainer::_hasContainerSetting($this->object->getId(), 'list_presentation') ||
+            ilContainer::_lookupContainerSetting($this->object->getId(), "list_presentation")!= 'tile'){
+            ilContainer::_writeContainerSetting($this->object->getId(), 'list_presentation', 'tile');
+            ilContainer::_writeContainerSetting($this->object->getId(), 'tile_size', 0);
+        }
 
         if (count($this->tiles) > 0) {
             $parent_tile = self::togo()->tiles()->getInstanceForObjRefId(ilToGoUIHookGUI::filterRefId() ?? ROOT_FOLDER_ID);
-            
             self::ildic()->ui()->mainTemplate()->addCss(self::togoplugin()->directory() . "/css/togo.css");
-
             $tpl = self::togoplugin()->template("TileCollection/collection.html");
-
-            self::ildic()->ctrl()->setParameterByClass(TileGUI::class, TileGUI::GET_PARAM_REF_ID, intval(ilToGoUIHookGUI::filterRefId()));            
-            
+            self::ildic()->ctrl()->setParameterByClass(TileGUI::class, TileGUI::GET_PARAM_REF_ID, intval(ilToGoUIHookGUI::filterRefId()));
             $home_link=ilLink::_getStaticLink(intval(self::togo()->config()->getHomeRefId()));
 
             $tpl->setVariable("VIEW", htmlspecialchars($parent_tile->getView()));
@@ -169,7 +184,7 @@ abstract class AbstractCollectionGUI implements CollectionGUIInterface
 
         $is_parent_css_rendered = false;
         foreach ($this->tiles as $tile) {
-            self::ildic()->event()->raise(IL_COMP_PLUGIN . "/" . ilToGoPlugin::PLUGIN_NAME, ilToGoPlugin::EVENT_CHANGE_TILE_BEFORE_RENDER, [
+            self::ildic()->event()->raise("Plugins" . "/" . ilToGoPlugin::PLUGIN_NAME, ilToGoPlugin::EVENT_CHANGE_TILE_BEFORE_RENDER, [
                 "tile" => $tile
             ]);
 

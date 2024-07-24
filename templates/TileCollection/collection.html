@@ -40,7 +40,7 @@
 	</div>
 </div>
 <script type="text/javascript" >
-	$( document ).ready(function() {
+	/*il.Util.addOnLoad(function (){
 		detectUserAdmin();
 		function detectUserAdmin(){
 			if($("#togohidden").attr("access")=== "open"){
@@ -50,10 +50,9 @@
 				$(".il-mainbar").addClass("togo-hidden")
 
 			}
-			return false;      
+			return false;
 		}
-    
-});
+	});*/
 	
 
 </script>
@@ -63,15 +62,19 @@
 
 
 <script>
-	$(document).ready(function () {
-		var heights=[];
-		$(".card_title").each(function(index){
-			
-			heights.push($(this).height());
+	document.addEventListener('DOMContentLoaded', function() {
+		$(document).ready(function () {
+			var heights=[];
+			$(".card_title").each(function(index){
+
+				heights.push($(this).height());
+			});
+			var largestTitle=Math.max(...heights);
+			console.log(heights);
+			$(".card_title").css("height", largestTitle);
+
 		});
-		var largestTitle=Math.max(...heights);
-		console.log(heights);
-		$(".card_title").css("height", largestTitle);
-	
 	});
+
+
 </script>

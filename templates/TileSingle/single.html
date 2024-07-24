@@ -16,14 +16,14 @@
 			<div class="card_icons" data-vertical_align="">
 
 				<div class="left_likes">
-					<div class="tile_icon_views"  title="{VIEWS_TEXT}"><img src="{VIEWS_IMAGE_PATH}" alt="" onload="SVGInject(this);">
+					<div class="tile_icon_views "  title="{VIEWS_TEXT}"><img class="injectable-svg" src="{VIEWS_IMAGE_PATH}" alt="" >
 						<span class=" ls_counter">{VIEWS_COUNT}</span>
 					</div>
 				</div>
 
 				<div class="right_ratings">
-					<a class="tile_icon_rating" href="{RATING_LINK}" onclick="event.stopPropagation();" title="{RATING_TEXT}">
-						<img src="{RATING_IMAGE_PATH}" alt="" onload="SVGInject(this);">
+					<a class="tile_icon_rating injectable-svg" href="{RATING_LINK}" onclick="event.stopPropagation();" title="{RATING_TEXT}">
+						<img class="injectable-svg" src="{RATING_IMAGE_PATH}" alt="">
 						<span class="ls_counter">{LIKES_COUNT}</span>
 					</a>
 				</div>
@@ -33,4 +33,9 @@
 		</div>
 	</div>
 </div>
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		SVGInject(document.querySelectorAll('.injectable-svg'));
+	});
+</script>
 <!-- END tile -->

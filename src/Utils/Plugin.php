@@ -2,12 +2,14 @@
 
 namespace minervis\ToGo\Utils;
 
+use ilGlobalTemplate;
 use ILIAS\UI\Component\Component;
 use ILIAS\UI\Implementation\Render\Template;
 use ilTable2GUI;
 use ilTemplate;
 use ilLanguage;
 use ilPlugin;
+use ilToGoPlugin;
 
 
 /**
@@ -76,13 +78,10 @@ final class Plugin
         }
 
         if ($plugin) {
-            $lng->loadLanguageModule($this->plugin_object->getPrefix());
+            $this->plugin_object->loadLanguageModule();
+            //$lng->loadLanguageModule($this->plugin_object->getPrefix());
+            $txt = $this->plugin_object->txt($key);
 
-            if ($lng->exists($this->plugin_object->getPrefix() . "_" . $key)) {
-                $txt = $lng->txt($this->plugin_object->getPrefix() . "_" . $key);
-            } else {
-                $txt = "";
-            }
         } else {
             if (!empty($module)) {
                 $lng->loadLanguageModule($module);
@@ -193,5 +192,14 @@ final class Plugin
         }
 
         return strval($html);
+    }
+
+
+}
+class CustomTemplate extends ilGlobalTemplate
+{
+    public function resetOnLoadCode()
+    {
+        $this->on_load_code = [];
     }
 }

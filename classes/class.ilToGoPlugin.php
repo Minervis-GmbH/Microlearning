@@ -25,7 +25,16 @@ class ilToGoPlugin extends ilUserInterfaceHookPlugin
      * @var self|null
      */
     protected static $instance = null;
+    public static ?ilComponentRepositoryWrite $cached_component_repository = null;
+    public static $cached_id = 0;
 
+    public function __construct(ilDBInterface $db, ilComponentRepositoryWrite $component_repository, string $id)
+    {
+        parent::__construct($db, $component_repository, $id);
+        self::$cached_id = $id;
+        self::$cached_component_repository = $component_repository;
+
+    }
 
     /**
      * @return self
@@ -33,34 +42,18 @@ class ilToGoPlugin extends ilUserInterfaceHookPlugin
     public static function getInstance() : self
     {
         if (self::$instance === null) {
-            self::$instance = new self();
+            self::$instance = new self(self::ildic()->database(), self::$cached_component_repository, self::$cached_id);
         }
 
         return self::$instance;
     }
 
-
-    /**
-     * ilToGoPlugin constructor
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-
-    /**
-     * @inheritDoc
-     */
     public function getPluginName() : string
     {
         return self::PLUGIN_NAME;
     }
 
 
-    /**
-     * @inheritDoc
-     */
     public function handleEvent(/*string*/ $a_component, /*string*/ $a_event, /*array*/ $a_parameter)/* : void*/
     {
         switch ($a_component) {
@@ -80,29 +73,12 @@ class ilToGoPlugin extends ilUserInterfaceHookPlugin
     }
 
 
-    /**
-     * @inheritDoc
-     */
-    public function updateLanguages(/*?array*/ $a_lang_keys = null)/*:void*/
-    {
-        parent::updateLanguages($a_lang_keys);
-
-        //$this->installRemovePluginDataConfirmLanguages();
-    }
-
-
-    /**
-     * @inheritDoc
-     */
     protected function deleteData()/*: void*/
     {
         self::togo()->dropTables();
     }
-    public function shouldUseOneUpdateStepOnly()
-    {
-    }
 
-    protected function beforeUninstall()
+    protected function beforeUninstall(): bool
     {
         self::togo()->dropTables();
         return true;
