@@ -28,37 +28,6 @@ class ContainerSingleGUI extends AbstractSingleGUI
      */
     public function render() : string
     {
-        $html = parent::render();
-        return $this->tpl->get();
-
-        if ( false || !self::$reset_file_upload_gui) {
-            Closure::bind(function () {
-            }, null, ilObjFileUploadDropzone::class)();
-            $on_load_code = self::ildic()->ui()->mainTemplate()->getOnLoadCodeForAsynch();
-            foreach ((array) $on_load_code as &$codes) {
-                self::ildic()->logger()->root()->dump(array(strpos($codes, "il.UI.Dropzone")));
-                if (strpos($codes, "il.UI.Dropzone") !== false) {
-                    $codes = "";
-
-                }
-            }
-            self::ildic()->logger()->root()->dump(array(count((array) $on_load_code), ));
-
-            self::$reset_file_upload_gui = true;
-        }
-        global $DIC, $tpl;
-        //$html = $this->tpl->get();
-
-        $il_object = ilObjectFactory::getInstanceByRefId($this->tile->getObjRefId(), false);
-        $file_upload_zone = new ilObjFileUploadDropzone($this->tile->getObjRefId(),  $this->tpl->get());
-        if ($file_upload_zone->isUploadAllowed($il_object->getType())) {
-            //$tpl->setFileUploadRefId($this->tile->getObjRefId());
-            $html = self::togoplugin()->getHTML([
-                //$this->tpl->get(),
-                $file_upload_zone->getDropzoneHtml()
-            ]);
-        }
-
-        return $html;
+        return parent::render();
     }
 }

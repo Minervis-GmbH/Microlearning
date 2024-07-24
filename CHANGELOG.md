@@ -22,3 +22,8 @@
 - Use ILIAS Tile background images if available
 - If title and description have html tags, don't strip them
 - If ILIAS tile layout is activated, plugin  fails to extract IDs from the html. Use ILIAS object's subitems and sort them accordingly
+
+## [2.0] 
+- ILIAS 8 Support
+- Remove FileUpload functionalities and replace them with Dropzone
+
