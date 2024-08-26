@@ -59,7 +59,7 @@ class AnonymousSummary extends ActiveRecord
      * @con_length      2
      * @con_is_notnull  true
      */
-    protected $tot_ratings;
+    protected $tot_ratings = 0;
     /**
      * @var int
      *
@@ -68,7 +68,7 @@ class AnonymousSummary extends ActiveRecord
      * @con_length      2
      * @con_is_notnull  true
      */
-    protected $tot_views;
+    protected $tot_views = 0;
 
 
     /**
