@@ -48,7 +48,7 @@ class ilToGoUIHookGUI extends ilUIHookPluginGUI
         if ($obj_ref_id === null) {
             $param_target = filter_input(INPUT_GET, self::GET_PARAM_TARGET);
 
-            $obj_ref_id = explode("_", $param_target)[1];
+            //$obj_ref_id = explode("_", $param_target)[1];
         }
 
         $obj_ref_id = intval($obj_ref_id);
