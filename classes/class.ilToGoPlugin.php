@@ -54,7 +54,7 @@ class ilToGoPlugin extends ilUserInterfaceHookPlugin
     }
 
 
-    public function handleEvent(/*string*/ $a_component, /*string*/ $a_event, /*array*/ $a_parameter)/* : void*/
+    public function handleEvent(string $a_component, string $a_event, array $a_parameter) :void
     {
         switch ($a_component) {
             case "Services/Object":
@@ -73,7 +73,7 @@ class ilToGoPlugin extends ilUserInterfaceHookPlugin
     }
 
 
-    protected function deleteData()/*: void*/
+    protected function deleteData(): void
     {
         self::togo()->dropTables();
     }

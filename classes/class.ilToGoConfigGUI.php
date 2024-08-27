@@ -39,7 +39,7 @@ class ilToGoConfigGUI extends ilPluginConfigGUI
     }
 
 
-    public function performCommand(/*string*/ $cmd): void
+    public function performCommand(string $cmd): void
     {
         $this->setTabs();
         $next_class = $this->dic->ctrl()->getNextClass($this);
@@ -68,7 +68,7 @@ class ilToGoConfigGUI extends ilPluginConfigGUI
     /**
      *
      */
-    protected function setTabs()/*: void*/
+    protected function setTabs(): void
     {
         $this->dic->tabs()->addTab(self::TAB_CONFIGURATION, $this->plugin_object->txt("config_configuration"), $this->dic->ctrl()
             ->getLinkTargetByClass(self::class, self::CMD_CONFIGURE));
@@ -83,7 +83,7 @@ class ilToGoConfigGUI extends ilPluginConfigGUI
     /**
      *
      */
-    protected function configure()/*: void*/
+    protected function configure(): void
     {
         global $tpl;
         //$this->dic->tabs()->activateTab(self::TAB_CONFIGURATION);
@@ -234,7 +234,7 @@ class ilToGoConfigGUI extends ilPluginConfigGUI
     /**
      *
      */
-    protected function updateConfigure()/*: void*/
+    protected function updateConfigure(): void
     {
         global $tpl;
         global $DIC;
